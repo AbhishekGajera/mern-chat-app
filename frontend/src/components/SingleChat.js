@@ -15,6 +15,8 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
+
+// const ENDPOINT = "http://localhost:8000";
 const ENDPOINT = "https://chat-app-abhishek.herokuapp.com"; // "http://localhost:8000"; -> After deployment
 var socket, selectedChatCompare;
 
