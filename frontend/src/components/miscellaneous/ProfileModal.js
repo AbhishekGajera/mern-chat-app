@@ -33,7 +33,7 @@ const ProfileModal = ({ user, children }) => {
             d="flex"
             justifyContent="center"
           >
-            {user.name}
+            {user.full_name}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody
@@ -45,8 +45,8 @@ const ProfileModal = ({ user, children }) => {
             <Image
               borderRadius="full"
               boxSize="150px"
-              src={user.pic}
-              alt={user.name}
+              src={'https://job-app-users.s3.ap-south-1.amazonaws.com/' + user.avatar}
+              alt={user.full_name}
             />
             <Text
               fontSize={{ base: "28px", md: "30px" }}

@@ -58,10 +58,10 @@ const GroupChatModal = ({ children }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`/users?full_name=${search}`, config);
       console.log(data);
       setLoading(false);
-      setSearchResult(data);
+      setSearchResult(data[0]?.data);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -97,7 +97,7 @@ const GroupChatModal = ({ children }) => {
         },
       };
       const { data } = await axios.post(
-        `/api/chat/group`,
+        `/chat/group`,
         {
           name: groupChatName,
           users: JSON.stringify(selectedUsers.map((u) => u._id)),
@@ -174,8 +174,8 @@ const GroupChatModal = ({ children }) => {
                 .map((user) => (
                   <UserListItem
                     key={user._id}
-                    user={user}
-                    handleFunction={() => handleGroup(user)}
+                    user={user?.user}
+                    handleFunction={() => handleGroup(user?.user)}
                   />
                 ))
             )}

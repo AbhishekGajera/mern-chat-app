@@ -77,10 +77,10 @@ function SideDrawer() {
         },
       };
 
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`/users?full_name=${search}`, config);
 
       setLoading(false);
-      setSearchResult(data);
+      setSearchResult(data[0]?.data);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -104,9 +104,9 @@ function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`/api/chat`, { userId }, config);
+      const { data } = await axios.post(`/chat`, { userId }, config);
 
-      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+      if (!chats.find((c) => c.id === data.id)) setChats([data, ...chats]);
       setSelectedChat(data);
       setLoadingChat(false);
       onClose();
@@ -142,7 +142,7 @@ function SideDrawer() {
           </Button>
         </Tooltip>
         <Text fontSize="2xl" fontFamily="Work sans">
-          Talk-A-Tive
+          Baysten-Chat-app
         </Text>
         <div>
           <Menu>
@@ -157,7 +157,7 @@ function SideDrawer() {
               {!notification.length && "No New Messages"}
               {notification.map((notif) => (
                 <MenuItem
-                  key={notif._id}
+                  key={notif.id}
                   onClick={() => {
                     setSelectedChat(notif.chat);
                     setNotification(notification.filter((n) => n !== notif));
@@ -175,8 +175,8 @@ function SideDrawer() {
               <Avatar
                 size="sm"
                 cursor="pointer"
-                name={user.name}
-                src={user.pic}
+                name={'https://job-app-users.s3.ap-south-1.amazonaws.com/' + user.avatar}
+                src={'https://job-app-users.s3.ap-south-1.amazonaws.com/' + user.avatar}
               />
             </MenuButton>
             <MenuList>
@@ -209,9 +209,9 @@ function SideDrawer() {
             ) : (
               searchResult?.map((user) => (
                 <UserListItem
-                  key={user._id}
-                  user={user}
-                  handleFunction={() => accessChat(user._id)}
+                  key={user.id}
+                  user={user?.user}
+                  handleFunction={() => accessChat(user?.user._id)}
                 />
               ))
             )}

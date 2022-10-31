@@ -16,8 +16,8 @@ import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
 
-// const ENDPOINT = "http://localhost:8000";
-const ENDPOINT = "https://chat-app-abhishek.herokuapp.com"; // "http://localhost:8000"; -> After deployment
+const ENDPOINT = "http://localhost:9000";
+// const ENDPOINT = "https://Baysten-Chat-app-abhishek.herokuapp.com"; // "http://localhost:8000"; -> After deployment
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -53,13 +53,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(true);
 
       const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
+        `/message/${selectedChat.id}`,
         config
       );
       setMessages(data);
       setLoading(false);
 
-      socket.emit("join chat", selectedChat._id);
+      socket.emit("join chat", selectedChat.id);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -74,7 +74,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
-      socket.emit("stop typing", selectedChat._id);
+      socket.emit("stop typing", selectedChat.id);
       try {
         const config = {
           headers: {
@@ -84,13 +84,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
         setNewMessage("");
         const { data } = await axios.post(
-          "/api/message",
+          "/message",
           {
             content: newMessage,
-            chatId: selectedChat,
+            chatId: selectedChat.id,
           },
           config
-        );
+        );        
         socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {
@@ -127,7 +127,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("message recieved", (newMessageRecieved) => {
       if (
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessageRecieved.chat._id
+        selectedChatCompare.id !== newMessageRecieved.chat.id
       ) {
         if (!notification.includes(newMessageRecieved)) {
           setNotification([newMessageRecieved, ...notification]);
@@ -146,7 +146,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
     if (!typing) {
       setTyping(true);
-      socket.emit("typing", selectedChat._id);
+      socket.emit("typing", selectedChat.id);
     }
     let lastTypingTime = new Date().getTime();
     var timerLength = 3000;
@@ -154,7 +154,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       var timeNow = new Date().getTime();
       var timeDiff = timeNow - lastTypingTime;
       if (timeDiff >= timerLength && typing) {
-        socket.emit("stop typing", selectedChat._id);
+        socket.emit("stop typing", selectedChat.id);
         setTyping(false);
       }
     }, timerLength);
