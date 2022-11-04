@@ -55,13 +55,13 @@ const GroupChatModal = ({ children }) => {
       setLoading(true);
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
-      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/users?full_name=${search}`, config);
+      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/users?name=${search}&size=10`, config);
       console.log(data);
       setLoading(false);
-      setSearchResult(data[0]?.data);
+      setSearchResult(data.results);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -93,17 +93,18 @@ const GroupChatModal = ({ children }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
       const { data } = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/chat/group`,
         {
           name: groupChatName,
-          users: JSON.stringify(selectedUsers.map((u) => u._id)),
+          users: JSON.stringify(selectedUsers.map((u) => u.id)),
         },
         config
       );
+
       setChats([data, ...chats]);
       onClose();
       toast({
@@ -116,7 +117,7 @@ const GroupChatModal = ({ children }) => {
     } catch (error) {
       toast({
         title: "Failed to Create the Chat!",
-        description: error.response.data,
+        description: error?.response?.data || error?.message,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -170,12 +171,12 @@ const GroupChatModal = ({ children }) => {
               <div>Loading...</div>
             ) : (
               searchResult
-                ?.slice(0, 4)
+                .slice(0,4)
                 .map((user) => (
                   <UserListItem
-                    key={user._id}
-                    user={user?.user}
-                    handleFunction={() => handleGroup(user?.user)}
+                    key={user.id}
+                    user={user}
+                    handleFunction={() => handleGroup(user)}
                   />
                 ))
             )}

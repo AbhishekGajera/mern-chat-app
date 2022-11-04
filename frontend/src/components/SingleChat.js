@@ -16,8 +16,8 @@ import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
 
-const ENDPOINT = "http://localhost:9000";
-// const ENDPOINT = "https://Baysten-Chat-app-abhishek.herokuapp.com"; // "http://localhost:8000"; -> After deployment
+const ENDPOINT = "http://localhost:8080";
+// const ENDPOINT = "https://Starn22-Chat-app-abhishek.herokuapp.com"; // "http://localhost:8000"; -> After deployment
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -46,7 +46,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
 
@@ -56,7 +56,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         `${process.env.REACT_APP_BASE_URL}/message/${selectedChat.id}`,
         config
       );
-      setMessages(data);
+      setMessages(data?.results);
       setLoading(false);
 
       socket.emit("join chat", selectedChat.id);
@@ -79,7 +79,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         const config = {
           headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${user.token}`,
+            token: `${user.token}`,
           },
         };
         setNewMessage("");
@@ -127,7 +127,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("message recieved", (newMessageRecieved) => {
       if (
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare.id !== newMessageRecieved.chat.id
+        selectedChatCompare.id !== newMessageRecieved.chat_data.id
       ) {
         if (!notification.includes(newMessageRecieved)) {
           setNotification([newMessageRecieved, ...notification]);

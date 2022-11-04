@@ -43,10 +43,10 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       setLoading(true);
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
-      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/users?full_name=${search}`, config);
+      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/users?name=${search}`, config);
       console.log(data);
       setLoading(false);
       setSearchResult(data[0]?.data);
@@ -70,7 +70,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       setRenameLoading(true);
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
       const { data } = await axios.put(
@@ -126,7 +126,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       setLoading(true);
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
       const { data } = await axios.put(
@@ -171,7 +171,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
       setLoading(true);
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
       const { data } = await axios.put(
@@ -220,7 +220,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
           <ModalCloseButton />
           <ModalBody d="flex" flexDir="column" alignItems="center">
             <Box w="100%" d="flex" flexWrap="wrap" pb={3}>
-              {selectedChat.users.map((u) => (
+              {selectedChat?.users?.map((u) => (
                 <UserBadgeItem
                   key={u._id}
                   user={u}

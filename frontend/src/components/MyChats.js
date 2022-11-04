@@ -21,12 +21,12 @@ const MyChats = ({ fetchAgain }) => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
 
       const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/chat`, config);
-      setChats(data);
+      setChats(data || []);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -90,6 +90,7 @@ const MyChats = ({ fetchAgain }) => {
         {chats ? (
           <Stack overflowY="scroll">
             {chats.map((chat) => {
+              console.info("chat.users+++ ",chat)
               return (
               <Box
                 onClick={() => setSelectedChat(chat)}
@@ -103,15 +104,15 @@ const MyChats = ({ fetchAgain }) => {
               >
                 <Text>
                   {!chat.isGroupChat
-                    ? getSender(loggedUser.user, chat.users)
-                    : chat.chatName}
+                    ? getSender(loggedUser.user, chat?.users)
+                    : chat?.chatName}
                 </Text>
-                {chat.latestMessage && (
+                {chat.latest_message_data && (
                   <Text fontSize="xs">
-                    <b>{chat.latestMessage.sender.full_name} : </b>
-                    {chat.latestMessage.content.length > 50
-                      ? chat.latestMessage.content.substring(0, 51) + "..."
-                      : chat.latestMessage.content}
+                    <b>{chat?.latest_message_data?.sender?.name} : </b>
+                    {chat?.latest_message_data?.content?.length > 50
+                      ? chat.latest_message_data.content.substring(0, 51) + "..."
+                      : chat.latest_message_data.content}
                   </Text>
                 )}
               </Box>

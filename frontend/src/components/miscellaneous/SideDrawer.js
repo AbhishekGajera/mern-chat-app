@@ -73,14 +73,14 @@ function SideDrawer() {
 
       const config = {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
 
-      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/users?full_name=${search}`, config);
+      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/users?name=${search}`, config);
 
       setLoading(false);
-      setSearchResult(data[0]?.data);
+      setSearchResult(data.results);
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -101,13 +101,15 @@ function SideDrawer() {
       const config = {
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
+          token: `${user.token}`,
         },
       };
       const { data } = await axios.post(`${process.env.REACT_APP_BASE_URL}/chat`, { userId }, config);
 
       if (!chats.find((c) => c.id === data.id)) setChats([data, ...chats]);
       setSelectedChat(data);
+
+      console.info("setSelectedChat+++ ",setSelectedChat , "data++ ",data )
       setLoadingChat(false);
       onClose();
     } catch (error) {
@@ -142,7 +144,7 @@ function SideDrawer() {
           </Button>
         </Tooltip>
         <Text fontSize="2xl" fontFamily="Work sans">
-          Baysten-Chat-app
+          Starn22-Chat-app
         </Text>
         <div>
           <Menu>
@@ -155,17 +157,18 @@ function SideDrawer() {
             </MenuButton>
             <MenuList pl={2}>
               {!notification.length && "No New Messages"}
+              {console.info("notification+++ ",notification, "loggedUser+++ ",user)}
               {notification.map((notif) => (
                 <MenuItem
                   key={notif.id}
                   onClick={() => {
-                    setSelectedChat(notif.chat);
+                    setSelectedChat(notif.chat_data);
                     setNotification(notification.filter((n) => n !== notif));
                   }}
                 >
-                  {notif.chat.isGroupChat
-                    ? `New Message in ${notif.chat.chatName}`
-                    : `New Message from ${getSender(user, notif.chat.users)}`}
+                  {notif.chat_data.isGroupChat === 1
+                    ? `New Message in ${notif.chat_data.chatName}`
+                    : `New Message from ${getSender(user, notif.users)}`}
                 </MenuItem>
               ))}
             </MenuList>
@@ -175,8 +178,8 @@ function SideDrawer() {
               <Avatar
                 size="sm"
                 cursor="pointer"
-                name={'https://job-app-users.s3.ap-south-1.amazonaws.com/' + user.avatar}
-                src={'https://job-app-users.s3.ap-south-1.amazonaws.com/' + user.avatar}
+                name={'http://13.233.1.246:8080/images/' + user.avatar}
+                src={'http://13.233.1.246:8080/images/' + user.avatar}
               />
             </MenuButton>
             <MenuList>
@@ -210,8 +213,8 @@ function SideDrawer() {
               searchResult?.map((user) => (
                 <UserListItem
                   key={user.id}
-                  user={user?.user}
-                  handleFunction={() => accessChat(user?.user._id)}
+                  user={user}
+                  handleFunction={() => accessChat(user.id)}
                 />
               ))
             )}

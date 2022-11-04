@@ -1,5 +1,5 @@
 {
-  "name": "Baysten-Chat-app",
+  "name": "Starn22-Chat-app",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -9,7 +9,7 @@
   },
   "keywords": [
     "mern",
-    "Baysten-Chat-app"
+    "Starn22-Chat-app"
   ],
   "author": "Abhishek Gajera",
   "license": "ISC",

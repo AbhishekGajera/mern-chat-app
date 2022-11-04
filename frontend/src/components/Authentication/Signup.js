@@ -100,7 +100,7 @@ const Signup = () => {
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
-      data.append("upload_preset", "Baysten-Chat-app");
+      data.append("upload_preset", "Starn22-Chat-app");
       data.append("cloud_name", "piyushproj");
       fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
         method: "post",
