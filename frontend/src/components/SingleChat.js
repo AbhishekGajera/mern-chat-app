@@ -141,7 +141,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
-
+    console.info("socket+++ ",socket)
     if (!socketConnected) return;
 
     if (!typing) {

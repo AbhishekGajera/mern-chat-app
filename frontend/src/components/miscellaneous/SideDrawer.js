@@ -157,7 +157,6 @@ function SideDrawer() {
             </MenuButton>
             <MenuList pl={2}>
               {!notification.length && "No New Messages"}
-              {console.info("notification+++ ",notification, "loggedUser+++ ",user)}
               {notification.map((notif) => (
                 <MenuItem
                   key={notif.id}
